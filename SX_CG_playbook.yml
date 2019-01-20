@@ -1,6 +1,8 @@
+
 ---
 - name: Source Installation for base system
   hosts: slave
+  remote_user: perfbhi
   tasks:
        - name: Create base dir for source compilation
          file:
@@ -9,3 +11,25 @@
            group: perfbhi
            mode: 0777
            state: directory
+       
+       - name: Commentout existing Bash_profile
+         replace:
+           path: /home/perfbhi/.bash_profile
+           regexp: 'PATH=$PATH:$HOME*'
+           replace: '#PATH'
+
+       - name: Add additional bash_profile entries
+         lineinfile:
+           path: /home/perfbhi/.bash_profile
+           line: 'PATH=/data1/apps-install/bin:$PATH' 
+       
+       - name: Add additional bash_profile entries  
+         lineinfile:  
+           path: /home/perfbhi/.bash_profile
+           line: 'LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:$LD_LIBRARY_PATH'
+
+       
+       - name: source bash_profile
+         shell: source "/home/perfbhi/.bash_profile" && echo $PATH
+         args:
+           executable: /bin/bash
