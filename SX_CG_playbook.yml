@@ -1,5 +1,5 @@
 ---
-- name: Source Installation for SX and CG nodes 
+- name: Source Installation for base system
   hosts: slave
   tasks:
        - name: Create base dir for source compilation
