@@ -55,3 +55,24 @@
          - ./configure --prefix=/data1/apps-install 
          - /usr/bin/make
          - /usr/bin/make install
+
+       - name: Copy DB package
+         copy:
+           src: /home/perfbhi/ansible/Source/db-4.7.25.tar.gz
+           dest: /data1/Source/db-4.7.25.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar DB Package
+         unarchive:
+           src: /data1/Source/db-4.7.25.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile DB package
+         command: "{{item}} chdir=/data1/Source/db-4.7.25/build_unix/"
+         with_items:
+         - ../dist/configure --prefix=/data1/DB
+         - /usr/bin/make
+         - /usr/bin/make install
