@@ -22,7 +22,7 @@
            line: 'LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:$LD_LIBRARY_PATH'
 
        
-       - name: source bash_profile
+       - name: Source bash_profile
          shell: source "/home/perfbhi/.bash_profile"
          args:
            executable: /bin/bash
@@ -35,7 +35,7 @@
            mode: 0777
            state: directory
 
-       - name: Installing Pen
+       - name: Copy Pen package
          copy:
            src: /home/perfbhi/ansible/Source/pen-0.18.0.tar.gz
            dest: /data1/Source/pen-0.18.0.tar.gz
