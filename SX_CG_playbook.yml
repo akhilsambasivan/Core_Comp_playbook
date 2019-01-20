@@ -26,3 +26,19 @@
          shell: source "/home/perfbhi/.bash_profile"
          args:
            executable: /bin/bash
+    
+       - name: Create remote dir for copying Source packages
+         file:
+           path: "/data1/Source"
+           owner: perfbhi
+           group: perfbhi
+           mode: 0777
+           state: directory
+
+       - name: Installing Pen
+         copy:
+           src: /home/perfbhi/ansible/Source/pen-0.18.0.tar.gz
+           dest: /data1/Source/pen-0.18.0.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 655
