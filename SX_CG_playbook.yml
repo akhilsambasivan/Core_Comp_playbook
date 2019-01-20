@@ -41,4 +41,17 @@
            dest: /data1/Source/pen-0.18.0.tar.gz
            owner: perfbhi
            group: perfbhi
-           mode: 655
+           mode: 0755
+
+       - name: Untar Pen Package
+         unarchive:
+           src: /data1/Source/pen-0.18.0.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Pen package
+         command: "{{item}} chdir=/data1/Source/pen-0.18.0/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install 
+         - /usr/bin/make
+         - /usr/bin/make install
