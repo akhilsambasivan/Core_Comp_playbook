@@ -1,0 +1,11 @@
+---
+- name: Source Installation for SX and CG nodes 
+  hosts: slave
+  tasks:
+       - name: Create base dir for source compilation
+         file:
+           path: "/data1/apps-install"
+           owner: perfbhi
+           group: perfbhi
+           mode: 0777
+           state: directory
