@@ -14,14 +14,13 @@
        - name: Add additional bash_profile entries
          lineinfile:
            path: /home/perfbhi/.bash_profile
-           line: 'PATH=/data1/apps-install/bin:$PATH' 
+           line: 'export PATH=/data1/apps-install/bin:/data1/DB/bin:/data1/openldap/bin:$PATH' 
        
        - name: Add additional bash_profile entries  
          lineinfile:  
            path: /home/perfbhi/.bash_profile
-           line: 'LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:$LD_LIBRARY_PATH'
+           line: 'export LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:/data1/DB/lib:/data1/openldap/lib:$LD_LIBRARY_PATH'
 
-       
        - name: Source bash_profile
          shell: source "/home/perfbhi/.bash_profile"
          args:
@@ -74,5 +73,33 @@
          command: "{{item}} chdir=/data1/Source/db-4.7.25/build_unix/"
          with_items:
          - ../dist/configure --prefix=/data1/DB
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy OpenLDAP package
+         copy:
+           src: /home/perfbhi/ansible/Source/openldap-2.4.35.gz
+           dest: /data1/Source/openldap-2.4.35.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar OpenLDAP Package
+         unarchive:
+           src: /data1/Source/openldap-2.4.35.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+ 
+       - name: Source bash_profile
+         shell: "export LD_LIBRARY_PATH=/data1/Source/db-4.7.25/build_unix/.libs:$LD_LIBRARY_PATH"
+         args:
+           executable: /bin/bash         
+
+       - name: Compile OpenLDAP package
+         command: "{{item}} chdir=/data1/Source/openldap-2.4.35/"
+         with_items:
+         - CPPFLAGS="-I /data1/DB/include/" LDFLAGS="-L /data1/DB/lib/"  ./configure --prefix=/data1/openldap
+         - /usr/bin/make depend
          - /usr/bin/make
          - /usr/bin/make install
