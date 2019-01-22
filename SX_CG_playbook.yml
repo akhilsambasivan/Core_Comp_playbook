@@ -10,22 +10,22 @@
            group: perfbhi
            mode: 0777
            state: directory
-       
+
        - name: Add additional bash_profile entries
          lineinfile:
            path: /home/perfbhi/.bash_profile
-           line: 'export PATH=/data1/apps-install/bin:/data1/DB/bin:/data1/openldap/bin:$PATH' 
-       
-       - name: Add additional bash_profile entries  
-         lineinfile:  
+           line: 'export PATH=/data1/apps-install/bin:/data1/DB/bin:/data1/openldap/bin:$PATH'
+
+       - name: Add additional bash_profile entries
+         lineinfile:
            path: /home/perfbhi/.bash_profile
            line: 'export LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:/data1/DB/lib:/data1/openldap/lib:$LD_LIBRARY_PATH'
 
        - name: Source bash_profile
-         shell: source "/home/perfbhi/.bash_profile"
+         shell: "source /home/perfbhi/.bash_profile"
          args:
            executable: /bin/bash
-    
+
        - name: Create remote dir for copying Source packages
          file:
            path: "/data1/Source"
@@ -51,11 +51,11 @@
        - name: Compile Pen package
          command: "{{item}} chdir=/data1/Source/pen-0.18.0/"
          with_items:
-         - ./configure --prefix=/data1/apps-install 
+         - ./configure --prefix=/data1/apps-install
          - /usr/bin/make
          - /usr/bin/make install
 
-       - name: Copy DB package
+       - name: Copy BDB package
          copy:
            src: /home/perfbhi/ansible/Source/db-4.7.25.tar.gz
            dest: /data1/Source/db-4.7.25.tar.gz
@@ -63,13 +63,13 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar DB Package
+       - name: Untar BDB Package
          unarchive:
            src: /data1/Source/db-4.7.25.tar.gz
            dest: /data1/Source/
            remote_src: yes
 
-       - name: Compile DB package
+       - name: Compile BDB package
          command: "{{item}} chdir=/data1/Source/db-4.7.25/build_unix/"
          with_items:
          - ../dist/configure --prefix=/data1/DB
@@ -90,16 +90,140 @@
            dest: /data1/Source/
            remote_src: yes
 
- 
-       - name: Source bash_profile
-         shell: "export LD_LIBRARY_PATH=/data1/Source/db-4.7.25/build_unix/.libs:$LD_LIBRARY_PATH"
-         args:
-           executable: /bin/bash         
+       - name: Configure OpenLDAP
+         shell: LD_LIBRARY_PATH="-L/data1/Source/db-4.7.25/build_unix/.libs/" CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
 
        - name: Compile OpenLDAP package
-         command: "{{item}} chdir=/data1/Source/openldap-2.4.35/"
+         command: "{{item}} chdir=/data1/Source/openldap-2.4.35"
          with_items:
-         - CPPFLAGS="-I /data1/DB/include/" LDFLAGS="-L /data1/DB/lib/"  ./configure --prefix=/data1/openldap
          - /usr/bin/make depend
          - /usr/bin/make
          - /usr/bin/make install
+         
+       - name: Copy Libtool package
+         copy:
+           src: /home/perfbhi/ansible/Source/libtool-2.4.6.tar.gz
+           dest: /data1/Source/libtool-2.4.6.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar Libtool Package
+         unarchive:
+           src: /data1/Source/libtool-2.4.6.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Libtool package
+         command: "{{item}} chdir=/data1/Source/libtool-2.4.6/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+         
+       - name: Copy Autoconf package
+         copy:
+           src: /home/perfbhi/ansible/Source/autoconf-2.69.tar.xz
+           dest: /data1/Source/autoconf-2.69.tar.xz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar Autoconf Package
+         unarchive:
+           src: /data1/Source/autoconf-2.69.tar.xz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Autoconf package
+         command: "{{item}} chdir=/data1/Source/autoconf-2.69/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+         
+       - name: Copy Automake package
+         copy:
+           src: /home/perfbhi/ansible/Source/automake-1.15.tar.gz
+           dest: /data1/Source/automake-1.15.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar Automake Package
+         unarchive:
+           src: /data1/Source/automake-1.15.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Automake package
+         command: "{{item}} chdir=/data1/Source/automake-1.15/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy PCRE package
+         copy:
+           src: /home/perfbhi/ansible/Source/pcre-8.33.zip
+           dest: /data1/Source/pcre-8.33.zip
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar PCRE Package
+         unarchive:
+           src: /data1/Source/pcre-8.33.zip
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile PCRE package
+         command: "{{item}} chdir=/data1/Source/pcre-8.33/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+         
+       - name: Copy Texinfo package
+         copy:
+           src: /home/perfbhi/ansible/Source/texinfo-6.4.tar.gz
+           dest: /data1/Source/texinfo-6.4.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar Texinfo Package
+         unarchive:
+           src: /data1/Source/texinfo-6.4.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Texinfo package
+         command: "{{item}} chdir=/data1/Source/texinfo-6.4/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+         
+       - name: Copy Help2man package
+         copy:
+           src: /home/perfbhi/ansible/Source/help2man-1.47.5.tar.xz
+           dest: /data1/Source/help2man-1.47.5.tar.xz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Untar Help2man Package
+         unarchive:
+           src: /data1/Source/help2man-1.47.5.tar.xz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Help2man package
+         command: "{{item}} chdir=/data1/Source/help2man-1.47.5/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+
