@@ -42,7 +42,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar Pen Package
+       - name: Unpack Pen Package
          unarchive:
            src: /data1/Source/pen-0.18.0.tar.gz
            dest: /data1/Source/
@@ -63,7 +63,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar BDB Package
+       - name: Unpack BDB Package
          unarchive:
            src: /data1/Source/db-4.7.25.tar.gz
            dest: /data1/Source/
@@ -84,7 +84,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar OpenLDAP Package
+       - name: Unpack OpenLDAP Package
          unarchive:
            src: /data1/Source/openldap-2.4.35.gz
            dest: /data1/Source/
@@ -108,7 +108,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar Libtool Package
+       - name: Unpack Libtool Package
          unarchive:
            src: /data1/Source/libtool-2.4.6.tar.gz
            dest: /data1/Source/
@@ -129,7 +129,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar Autoconf Package
+       - name: Unpack Autoconf Package
          unarchive:
            src: /data1/Source/autoconf-2.69.tar.xz
            dest: /data1/Source/
@@ -150,7 +150,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar Automake Package
+       - name: Unpack Automake Package
          unarchive:
            src: /data1/Source/automake-1.15.tar.gz
            dest: /data1/Source/
@@ -171,7 +171,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar PCRE Package
+       - name: Unpack PCRE Package
          unarchive:
            src: /data1/Source/pcre-8.33.zip
            dest: /data1/Source/
@@ -192,7 +192,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar Texinfo Package
+       - name: Unpack Texinfo Package
          unarchive:
            src: /data1/Source/texinfo-6.4.tar.gz
            dest: /data1/Source/
@@ -213,7 +213,7 @@
            group: perfbhi
            mode: 0755
 
-       - name: Untar Help2man Package
+       - name: Unpack Help2man Package
          unarchive:
            src: /data1/Source/help2man-1.47.5.tar.xz
            dest: /data1/Source/
@@ -226,4 +226,75 @@
          - /usr/bin/make
          - /usr/bin/make install
 
+       - name: Copy Apache package
+         copy:
+           src: /home/perfbhi/ansible/Source/httpd-2.4.37.tar.bz2
+           dest: /data1/Source/httpd-2.4.37.tar.bz2
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+       
+       - name: Unpack Apache Package
+         unarchive:
+           src: /data1/Source/httpd-2.4.37.tar.bz2
+           dest: /data1/Source/
+           remote_src: yes
 
+       - name: Copy Apr package
+         copy:
+           src: /home/perfbhi/ansible/Source/apr-1.6.5.tar.bz2
+           dest: /data1/Source/apr-1.6.5.tar.bz2
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Apr Package
+         unarchive:
+           src: /data1/Source/apr-1.6.5.tar.bz2
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Copy Apr Package inside Apache
+         command: cp -r /data1/Source/apr-1.6.5 /data1/Source/httpd-2.4.37/srclib/apr
+
+       - name: Copy Apr-util package
+         copy:
+           src: /home/perfbhi/ansible/Source/apr-util-1.6.1.tar.bz2
+           dest: /data1/Source/apr-util-1.6.1.tar.bz2
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Apr-util Package
+         unarchive:
+           src: /data1/Source/apr-util-1.6.1.tar.bz2
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Copy Apr-util Package inside Apache
+         command: cp -r /data1/Source/apr-util-1.6.1 /data1/Source/httpd-2.4.37/srclib/apr-util
+
+       - name: Compile Apr package
+         command: "{{item}} chdir=/data1/Source/httpd-2.4.37/srclib/apr/"
+         with_items:
+         - ./configure --prefix=/data1/httpd/apr
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Configure Apache package
+         shell: ./configure --prefix=/data1/httpd/apr-util --with-ldap --with-apr=/data1/httpd/apr --with-ldap-include=/data1/openldap/include --with-ldap-lib=/data1/openldap/lib chdir=/data1/Source/httpd-2.4.37/srclib/apr-util
+         
+       - name: Compile Apr-util package
+         command: "{{item}} chdir=/data1/Source/httpd-2.4.37/srclib/apr-util"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+         
+       - name: Configure Apache package
+         shell: ./configure  --prefix=/data1/httpd/apache  --enable-dav=shared  --enable-dav  --with-pcre=/data1/apps-install --enable-ldap --enable-authnz-ldap  --disable-userdir --with-apr-util=/data1/httpd/apr-util --with-apr=/data1/httpd/apr --enable-so  --enable-rewrite --enable-cgi --enable-ssl  --enable-modules=all --enable-mods-shared=all --with-ldap --with-mpm=prefork --with-included-apr --with-ldap-include=/data1/openldap/include  --with-ldap-lib=/data1/openldap/lib chdir=/data1/Source/httpd-2.4.37
+         
+       - name: Compile Apache package
+         command: "{{item}} chdir=/data1/Source/httpd-2.4.37"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
