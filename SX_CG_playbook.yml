@@ -298,3 +298,41 @@
          with_items:
          - /usr/bin/make
          - /usr/bin/make install
+
+       - name: Copy gsoap package
+         copy:
+           src: /home/perfbhi/ansible/Source/gsoap_2.8.2.zip
+           dest: /data1/Source/gsoap_2.8.2.zip
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755         
+
+       - name: Unpack gsoap Package
+         unarchive:
+           src: /data1/Source/gsoap_2.8.2.zip
+           dest: /data1/Source/
+           remote_src: yes
+           
+       - name: Compile gsoap package
+         command: "{{item}} chdir=/data1/Source/gsoap-2.8/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Configure gsoap for fastcgi installation
+         shell: /data1/httpd/apache/bin/apxs -a -i -c -I/data1/apps-install/include mod_gsoap.c chdir=/data1/Source/gsoap-2.8/gsoap/mod_gsoap/mod_gsoap-0.6/apache_20
+
+       - name: Copy FastCGI package
+         copy:
+           src: /home/perfbhi/ansible/Source/mod_fastcgi-current.tar.gz
+           dest: /data1/Source/mod_fastcgi-current.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack FastCGI Package
+         unarchive:
+           src: /data1/Source/mod_fastcgi-current.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
