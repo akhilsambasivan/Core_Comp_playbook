@@ -336,3 +336,6 @@
            src: /data1/Source/mod_fastcgi-current.tar.gz
            dest: /data1/Source/
            remote_src: yes
+
+       - name: Configure settings for fastcgi installation
+         shell: patch -p1 < byte-compile-against-apache24.diff chdir=/data1/Source/mod_fastcgi-2.4.6
