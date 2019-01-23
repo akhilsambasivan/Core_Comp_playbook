@@ -92,6 +92,8 @@
 
        - name: Configure OpenLDAP
          shell: LD_LIBRARY_PATH="-L/data1/Source/db-4.7.25/build_unix/.libs/" CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
+         args:
+           executable: /bin/bash
 
        - name: Compile OpenLDAP package
          command: "{{item}} chdir=/data1/Source/openldap-2.4.35"
