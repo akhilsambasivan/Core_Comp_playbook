@@ -446,7 +446,7 @@
          - /usr/bin/make install
          
        - name: Export Python path
-         shell: export PY_PREFIX="/data1/Python-2.7.5"
+         shell: export PY_PREFIX=/data1/Python-2.7.5
 
        - name: Copy Boost 1_64 package
          copy:
@@ -463,10 +463,13 @@
            remote_src: yes
 
        - name: Bootstrap Boost 1_64 package
-         shell: sh bootstrap.sh --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
-         
+         shell: /data1/Source/boost_1_64_0/bootstrap.sh --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
+         args:
+           executable: /bin/bash
+
        - name: B2 installation for Boost 1_64 package
          shell: ./b2 --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
 
        - name: Bjam installation for Boost 1_64 package
          shell: ./bjam install   chdir=/data1/Source/boost_1_64_0
+
