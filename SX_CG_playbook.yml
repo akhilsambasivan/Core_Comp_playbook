@@ -94,7 +94,7 @@
          shell: LD_LIBRARY_PATH="-L/data1/Source/db-4.7.25/build_unix/.libs/" CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
          args:
            executable: /bin/bash
-
+           
        - name: Compile OpenLDAP package
          command: "{{item}} chdir=/data1/Source/openldap-2.4.35"
          with_items:
@@ -426,30 +426,6 @@
          - /usr/bin/make
          - /usr/bin/make install
 
-       - name: Copy Python-2.7.5 package
-         copy:
-           src: /home/perfbhi/ansible/Source/Python-2.7.5.tar.xz
-           dest: /data1/Source/Python-2.7.5.tar.xz
-           owner: perfbhi
-           group: perfbhi
-           mode: 0755
-
-       - name: Unpack Python-2.7.5 Package
-         unarchive:
-           src: /data1/Source/Python-2.7.5.tar.xz
-           dest: /data1/Source/
-           remote_src: yes
-
-       - name: Compile Python-2.7.5 package
-         command: "{{item}} chdir=/data1/Source/Python-2.7.5"
-         with_items:
-         - ./configure --prefix=/data1/Python-2.7.5
-         - /usr/bin/make
-         - /usr/bin/make install
-         
-       - name: Export Python path
-         shell: export PY_PREFIX=/data1/Python-2.7.5
-
        - name: Copy Boost 1_64 package
          copy:
            src: /home/perfbhi/ansible/Source/boost_1_64_0.tar.gz
@@ -475,3 +451,72 @@
        - name: Bjam installation for Boost 1_64 package
          shell: ./bjam install   chdir=/data1/Source/boost_1_64_0
 
+       - name: Copy Python-2.7.5 package
+         copy:
+           src: /home/perfbhi/ansible/Source/Python-2.7.5.tar.xz
+           dest: /data1/Source/Python-2.7.5.tar.xz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Python-2.7.5 Package
+         unarchive:
+           src: /data1/Source/Python-2.7.5.tar.xz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Python-2.7.5 package
+         command: "{{item}} chdir=/data1/Source/Python-2.7.5"
+         with_items:
+         - ./configure --prefix=/data1/Python-2.7.5
+         - /usr/bin/make
+         - /usr/bin/make install
+         
+       - name: Export Python path
+         shell: export PY_PREFIX=/data1/Python-2.7.5
+
+       - name: Copy Thrift package
+         copy:
+           src: /home/perfbhi/ansible/Source/thrift-0.8.0.tar.gz
+           dest: /data1/Source/thrift-0.8.0.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Thrift Package
+         unarchive:
+           src: /data1/Source/thrift-0.8.0.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Configure settings for Thrift installation
+         shell: ./configure --prefix=/data1/apps-install --with-python=/data1/Python-2.7.5 --with-boost=/data1/apps-install chdir=/data1/Source/thrift-0.8.0
+         args:
+           executable: /bin/bash
+
+       - name: Compile Thrift package
+         command: "{{item}} chdir=/data1/Source/thrift-0.8.0"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy Cmake package
+         copy:
+           src: /home/perfbhi/ansible/Source/cmake-3.2.1.tar.gz
+           dest: /data1/Source/cmake-3.2.1.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Cmake Package
+         unarchive:
+           src: /data1/Source/cmake-3.2.1.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile Cmake package
+         command: "{{item}} chdir=/data1/Source/cmake-3.2.1"
+         with_items:
+         - ./configure  --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
