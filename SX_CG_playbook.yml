@@ -94,7 +94,7 @@
          shell: LD_LIBRARY_PATH="-L/data1/Source/db-4.7.25/build_unix/.libs/" CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
          args:
            executable: /bin/bash
-           
+
        - name: Compile OpenLDAP package
          command: "{{item}} chdir=/data1/Source/openldap-2.4.35"
          with_items:
@@ -426,31 +426,6 @@
          - /usr/bin/make
          - /usr/bin/make install
 
-       - name: Copy Boost 1_64 package
-         copy:
-           src: /home/perfbhi/ansible/Source/boost_1_64_0.tar.gz
-           dest: /data1/Source/boost_1_64_0.tar.gz
-           owner: perfbhi
-           group: perfbhi
-           mode: 0755
-
-       - name: Unpack Boost 1_64 Package
-         unarchive:
-           src: /data1/Source/boost_1_64_0.tar.gz
-           dest: /data1/Source/
-           remote_src: yes
-
-       - name: Bootstrap Boost 1_64 package
-         shell: /data1/Source/boost_1_64_0/bootstrap.sh --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
-         args:
-           executable: /bin/bash
-
-       - name: B2 installation for Boost 1_64 package
-         shell: ./b2 --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
-
-       - name: Bjam installation for Boost 1_64 package
-         shell: ./bjam install   chdir=/data1/Source/boost_1_64_0
-
        - name: Copy Python-2.7.5 package
          copy:
            src: /home/perfbhi/ansible/Source/Python-2.7.5.tar.xz
@@ -471,9 +446,34 @@
          - ./configure --prefix=/data1/Python-2.7.5
          - /usr/bin/make
          - /usr/bin/make install
-         
+
        - name: Export Python path
          shell: export PY_PREFIX=/data1/Python-2.7.5
+
+       - name: Copy Boost 1_64 package
+         copy:
+           src: /home/perfbhi/ansible/Source/boost_1_64_0.tar.gz
+           dest: /data1/Source/boost_1_64_0.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Boost 1_64 Package
+         unarchive:
+           src: /data1/Source/boost_1_64_0.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Bootstrap Boost 1_64 package
+         shell: /data1/Source/boost_1_64_0/bootstrap.sh --with-python=/data1/Python-2.7.5/bin/python2 --with-python-version=2.7 --with-python-root=/data1/Python-2.7.5/lib/python2.7 --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
+         args:
+           executable: /bin/bash
+
+       - name: B2 installation for Boost 1_64 package
+         shell: ./b2 --prefix=/data1/apps-install chdir=/data1/Source/boost_1_64_0
+
+       - name: Bjam installation for Boost 1_64 package
+         shell: ./bjam --prefix=/data1/apps-install install chdir=/data1/Source/boost_1_64_0
 
        - name: Copy Thrift package
          copy:
@@ -520,3 +520,211 @@
          - ./configure  --prefix=/data1/apps-install
          - /usr/bin/make
          - /usr/bin/make install
+
+       - name: Copy Libuv package
+         copy:
+           src: /home/perfbhi/ansible/Source/libuv-1.x.zip
+           dest: /data1/Source/libuv-1.x.zip
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Libuv Package
+         unarchive:
+           src: /data1/Source/libuv-1.x.zip
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Autogen configure for Libuv package
+         shell: ./autogen.sh chdir=/data1/Source/libuv-1.x
+         args:
+           executable: /bin/bash
+
+       - name: Compile Libuv package
+         command: "{{item}} chdir=/data1/Source/libuv-1.x"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy cpp-driver package
+         copy:
+           src: /home/perfbhi/ansible/Source/cpp-driver-2.2.2.tar.gz
+           dest: /data1/Source/cpp-driver-2.2.2.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack cpp-driver Package
+         unarchive:
+           src: /data1/Source/cpp-driver-2.2.2.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Cmake for cpp-driver package
+         shell: /data1/apps-install/bin/cmake -DCMAKE_INSTALL_PREFIX:PATH=/data1/apps-install . chdir=/data1/Source/cpp-driver-2.2.2
+         args:
+           executable: /bin/bash
+
+       - name: Compile cpp-driver package
+         command: "{{item}} chdir=/data1/Source/cpp-driver-2.2.2"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy Libavrocpp package
+         copy:
+           src: /home/perfbhi/ansible/Source/avro-cpp-1.8.2.tar.gz
+           dest: /data1/Source/avro-cpp-1.8.2.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Libavrocpp Package
+         unarchive:
+           src: /data1/Source/avro-cpp-1.8.2.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Create build dir for Libavrocpp compilation
+         file:
+           path: "/data1/Source/avro-cpp-1.8.2/build"
+           owner: perfbhi
+           group: perfbhi
+           mode: 0777
+           state: directory
+
+       - name: Cmake for Libavrocpp package
+         shell: /data1/apps-install/bin/cmake /data1/Source/avro-cpp-1.8.2 -G "Unix Makefiles" -DBOOST_INCLUDEDIR=/data1/apps-install/include -DBOOST_ROOT=/data1/apps-install -DCMAKE_INSTALL_PREFIX=/data1/apps-install/ chdir=/data1/Source/avro-cpp-1.8.2/build
+
+       - name: Compile Libavrocpp package
+         command: "{{item}} chdir=/data1/Source/avro-cpp-1.8.2/build/"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy librd-KAFKA package
+         copy:
+           src: /home/perfbhi/ansible/Source/librdkafka-master.zip
+           dest: /data1/Source/librdkafka-master.zip
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack librd-KAFKA Package
+         unarchive:
+           src: /data1/Source/librdkafka-master.zip
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile librd-KAFKA package
+         command: "{{item}} chdir=/data1/Source/librdkafka-master/"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy cpprestsdk-2.9.0 package
+         copy:
+           src: /home/perfbhi/ansible/Source/cpprestsdk-2.9.0.tar.gz
+           dest: /data1/Source/cpprestsdk-2.9.0.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack cpprestsdk-2.9.0 Package
+         unarchive:
+           src: /data1/Source/cpprestsdk-2.9.0.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Create build dir for cpprestsdk-2.9.0 compilation
+         file:
+           path: "/data1/Source/cpprestsdk-2.9.0/Release/build.release"
+           owner: perfbhi
+           group: perfbhi
+           mode: 0777
+           state: directory
+
+       - name: Cmake for cpprestsdk-2.9.0 package
+         shell: /data1/apps-install/bin/cmake /data1/Source/cpprestsdk-2.9.0/Release -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/data1/apps-install -DWERROR=OFF chdir=/data1/Source/cpprestsdk-2.9.0/Release/build.release
+
+       - name: Compile cpprestsdk-2.9.0 package
+         command: "{{item}} chdir=/data1/Source/cpprestsdk-2.9.0/Release/build.release"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy szip package
+         copy:
+           src: /home/perfbhi/ansible/Source/szip-2.1.1.tar.gz
+           dest: /data1/Source/szip-2.1.1.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack szip Package
+         unarchive:
+           src: /data1/Source/szip-2.1.1.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Compile szip package
+         command: "{{item}} chdir=/data1/Source/szip-2.1.1"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy GRPC package
+         copy:
+           src: /home/perfbhi/ansible/Source/grpc-1.1.0-pre1.tar.gz
+           dest: /data1/Source/grpc-1.1.0-pre1.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack GRPC Package
+         unarchive:
+           src: /data1/Source/grpc-1.1.0-pre1.tar.gz
+           dest: /data1/Source/
+           remote_src: yes		 
+		 
+       - name: Copy Protobuf for GRPC package
+         copy:
+           src: /home/perfbhi/ansible/Source/protobuf-3.0.0.tar.gz
+           dest: /data1/Source/protobuf-3.0.0.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Protobuf for GRPC Package
+         unarchive:
+           src: /data1/Source/protobuf-3.0.0.tar.gz
+           dest: /data1/Source/grpc-1.1.0-pre1/third_party/
+           remote_src: yes				 
+
+       - name: Rename Protobuf for GRPC Package compilation
+         shell: mv /data1/Source/grpc-1.1.0-pre1/third_party/protobuf-3.0.0/* /data1/Source/grpc-1.1.0-pre1/third_party/protobuf/ chdir=/data1/Source/grpc-1.1.0-pre1
+
+       - name: Autogen configure Protobuf package for GRPC Package compilation
+         shell: ./autogen.sh chdir=/data1/Source/grpc-1.1.0-pre1/third_party/protobuf
+
+       - name: Compile Protobuf package for GRPC Package compilation
+         command: "{{item}} chdir=/data1/Source/protobuf-3.0.0"
+         with_items:
+         - ./configure --prefix=/data1/apps-install/
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Edit Makefile entry
+         lineinfile:
+           dest: /data1/Source/grpc-1.1.0-pre1/Makefile
+           regexp: '^(.*)CPPFLAGS_opt = -O2(.*)$'
+           line: 'CPPFLAGS_opt = -O0'
+
+       - name: Compile GRPC Package
+         command: "{{item}} chdir=/data1/Source/grpc-1.1.0-pre1"
+         with_items:
+         - /usr/bin/make prefix=/data1/apps-install/
+         - /usr/bin/make prefix=/data1/apps-install/ install
