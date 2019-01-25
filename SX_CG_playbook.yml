@@ -22,7 +22,7 @@
            line: 'export LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:/data1/DB/lib:/data1/openldap/lib:/data1/Python-2.7.5/lib:$LD_LIBRARY_PATH'
 
        - name: Source bash_profile
-         shell: "source /home/perfbhi/.bash_profile"
+         shell: source .bash_profile chdir=/home/perfbhi
          args:
            executable: /bin/bash
 
@@ -688,8 +688,8 @@
          unarchive:
            src: /data1/Source/grpc-1.1.0-pre1.tar.gz
            dest: /data1/Source/
-           remote_src: yes		 
-		 
+           remote_src: yes               
+                 
        - name: Copy Protobuf for GRPC package
          copy:
            src: /home/perfbhi/ansible/Source/protobuf-3.0.0.tar.gz
@@ -702,7 +702,7 @@
          unarchive:
            src: /data1/Source/protobuf-3.0.0.tar.gz
            dest: /data1/Source/grpc-1.1.0-pre1/third_party/
-           remote_src: yes				 
+           remote_src: yes                               
 
        - name: Rename Protobuf for GRPC Package compilation
          shell: mv /data1/Source/grpc-1.1.0-pre1/third_party/protobuf-3.0.0/* /data1/Source/grpc-1.1.0-pre1/third_party/protobuf/ chdir=/data1/Source/grpc-1.1.0-pre1
