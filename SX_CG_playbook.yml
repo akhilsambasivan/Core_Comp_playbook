@@ -688,8 +688,8 @@
          unarchive:
            src: /data1/Source/grpc-1.1.0-pre1.tar.gz
            dest: /data1/Source/
-           remote_src: yes               
-                 
+           remote_src: yes
+
        - name: Copy Protobuf for GRPC package
          copy:
            src: /home/perfbhi/ansible/Source/protobuf-3.0.0.tar.gz
@@ -702,7 +702,7 @@
          unarchive:
            src: /data1/Source/protobuf-3.0.0.tar.gz
            dest: /data1/Source/grpc-1.1.0-pre1/third_party/
-           remote_src: yes                               
+           remote_src: yes
 
        - name: Rename Protobuf for GRPC Package compilation
          shell: mv /data1/Source/grpc-1.1.0-pre1/third_party/protobuf-3.0.0/* /data1/Source/grpc-1.1.0-pre1/third_party/protobuf/ chdir=/data1/Source/grpc-1.1.0-pre1
@@ -723,8 +723,95 @@
            regexp: '^(.*)CPPFLAGS_opt = -O2(.*)$'
            line: 'CPPFLAGS_opt = -O0'
 
-       - name: Compile GRPC Package
+       - name: GRPC Package compilation
          command: "{{item}} chdir=/data1/Source/grpc-1.1.0-pre1"
          with_items:
          - /usr/bin/make prefix=/data1/apps-install/
          - /usr/bin/make prefix=/data1/apps-install/ install
+
+       - name: Copy Hdf5 package
+         copy:
+           src: /home/perfbhi/ansible/Source/hdf5-1.10.1.tar.gz
+           dest: /data1/Source/hdf5-1.10.1.tar.gz
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Unpack Hdf5 Package
+         unarchive:
+           src: /data1/Source/hdf5-1.10.1.tar.gz
+           dest: /data1/Source/
+           remote_src: yes
+
+       - name: Configure Hdf5 package
+         shell: ./configure --enable-fortran --enable-cxx --enable-java --enable-shared --enable-static --with-szlib=/data1/apps-install/ --with-zlib chdir=/data1/Source/hdf5-1.10.1  --prefix=/data1/apps-install
+
+       - name: Compile Hdf5 package
+         command: "{{item}} chdir=/data1/Source/hdf5-1.10.1"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Copy libopc package
+         copy:
+           src: /home/perfbhi/ansible/Source/libopc-43456.zip
+           dest: /data1/Source/libopc-43456.zip
+           owner: perfbhi
+           group: perfbhi
+           mode: 0755
+
+       - name: Create base dir for libopc source compilation
+         file:
+           path: "/data1/Source/libopc"
+           owner: perfbhi
+           group: perfbhi
+           mode: 0777
+           state: directory
+
+       - name: Unpack libopc Package
+         unarchive:
+           src: /data1/Source/libopc-43456.zip
+           dest: /data1/Source/libopc
+           remote_src: yes
+
+       - name: Configure permission for libopc packages
+         file:
+           path: "/data1/Source/libopc"
+           owner: perfbhi
+           group: perfbhi
+           mode: 0777
+           state: directory
+           recurse: yes
+
+       - name: Configure and compile zlib package for libopc
+         command: "{{item}} chdir=/data1/Source/libopc/third_party/zlib-1.2.5"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Configure libxml2 package for libopc
+         shell: ./configure  --enable-shared --with-zlib=/data1/apps-install  --prefix=/data1/apps-install chdir=/data1/Source/libopc/third_party/libxml2-2.7.7
+
+       - name: Compile libxml2 package for libopc
+         command: "{{item}} chdir=/data1/Source/libopc/third_party/libxml2-2.7.7"
+         with_items:
+         - /usr/bin/make
+         - /usr/bin/make install
+
+       - name: Configure plib package for libopc
+         command: "{{item}} chdir=/data1/Source/libopc/plib"
+         with_items:
+         - ./configure --prefix=/data1/apps-install
+
+       - name: Configure libopc package
+         shell: ./configure --with-zlib=yes --with-zlib-ldflags=/data1/apps-install/lib/libz.so --with-libxml=yes --with-libxml-cppflags="-I/data1/apps-install/include/libxml2" --with-libxml-ldflags=/data1/apps-install/lib/libxml2.so --with-python=/data1/Python-2.7.5/bin/python2.7 chdir=/data1/Source/libopc
+
+       - name: Make libopc package
+         shell: make "DESTDIR=/data1/apps-install" chdir=/data1/Source/libopc
+
+       - name: Make install libopc package
+         shell: make "DESTDIR=/data1/apps-install install" chdir=/data1/Source/libopc
+          
+       - name: INSTALLATION COMPLETED
+         shell: echo "INSTALLATION COMPLETED" chdir=/home/perfbhi
