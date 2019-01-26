@@ -91,7 +91,7 @@
            remote_src: yes
 
        - name: export LD_LIBRARY_PATH for OpenLDAP
-         shell: export LD_LIBRARY_PATH="L/data1/Source/db-4.7.25/build_unix/.libs" chdir=/data1/Source/openldap-2.4.35
+         shell: export LD_LIBRARY_PATH="/data1/Source/db-4.7.25/build_unix/.libs" chdir=/data1/Source/openldap-2.4.35
          
        - name: Configure OpenLDAP
          shell: CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
