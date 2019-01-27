@@ -749,6 +749,9 @@
        - name: Configure Hdf5 package
          shell: ./configure --enable-fortran --enable-cxx --enable-java --enable-shared --enable-static --with-szlib=/data1/apps-install/ --with-zlib chdir=/data1/Source/hdf5-1.10.1  --prefix=/data1/apps-install
 
+       - name: export LD_LIBRARY_PATH for Hdf5
+         shell: export LD_LIBRARY_PATH="/data1/apps-install/lib" chdir=/data1/Source/hdf5-1.10.1
+
        - name: Compile Hdf5 package
          command: "{{item}} chdir=/data1/Source/hdf5-1.10.1"
          with_items:
