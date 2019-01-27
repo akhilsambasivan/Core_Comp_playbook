@@ -94,7 +94,7 @@
          shell: export LD_LIBRARY_PATH="/data1/Source/db-4.7.25/build_unix/.libs" chdir=/data1/Source/openldap-2.4.35
          
        - name: Configure OpenLDAP
-         shell: CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
+         shell: LD_LIBRARY_PATH="-L/data1/Source/db-4.7.25/build_unix/.libs" CPPFLAGS="-I/data1/DB/include/" LDFLAGS="-L/data1/DB/lib/" ./configure --prefix=/data1/openldap chdir=/data1/Source/openldap-2.4.35
          args:
            executable: /bin/bash
 
@@ -720,7 +720,7 @@
          - /usr/bin/make
          - /usr/bin/make install
 
-       - name: Edit Makefile entry
+       - name: Edit Makefile entry for GRPC package compilation
          lineinfile:
            dest: /data1/Source/grpc-1.1.0-pre1/Makefile
            regexp: '^(.*)CPPFLAGS_opt = -O2(.*)$'
@@ -747,10 +747,7 @@
            remote_src: yes
 
        - name: Configure Hdf5 package
-         shell: ./configure --enable-fortran --enable-cxx --enable-java --enable-shared --enable-static --with-szlib=/data1/apps-install/ --with-zlib chdir=/data1/Source/hdf5-1.10.1  --prefix=/data1/apps-install
-
-       - name: export LD_LIBRARY_PATH for Hdf5
-         shell: export LD_LIBRARY_PATH="/data1/apps-install/lib" chdir=/data1/Source/hdf5-1.10.1
+         shell: ./configure --prefix=/data1/apps-install --enable-fortran --enable-cxx --enable-java --enable-shared --enable-static --with-szlib=/data1/apps-install/include --with-zlib chdir=/data1/Source/hdf5-1.10.1
 
        - name: Compile Hdf5 package
          command: "{{item}} chdir=/data1/Source/hdf5-1.10.1"
@@ -818,6 +815,6 @@
 
        - name: Make install libopc package
          shell: make "DESTDIR=/data1/apps-install install" chdir=/data1/Source/libopc
-          
+
        - name: INSTALLATION COMPLETED
          shell: echo "INSTALLATION COMPLETED" chdir=/home/perfbhi
