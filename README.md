@@ -1,6 +1,6 @@
 # Ansible code to install and compile custom modules. 
 
-An Ansible code that custom compiles the following components on RedHat/CentOS or Debian/Ubuntu as being the normal user.
+An Ansible code that custom compiles the following components on RedHat/CentOS as being the normal user.
 
 ## Prerequisites to be installed in all the nodes to support the compilation without any issues:
     * expat-devel-2.1.0-10.el7_3.x86_64 
