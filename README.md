@@ -2,7 +2,7 @@
 
 An Ansible code that custom compiles the following components on RedHat/CentOS or Debian/Ubuntu as being the normal user.
 
-## Following prerequisite packages are to be installed in all the nodes to support the compilation without any issues. 
+## Prerequisites to be installed in all the nodes to support the compilation without any issues:
     * expat-devel-2.1.0-10.el7_3.x86_64 
     * libtool-2.4.2-22.el7_3.x86_64
     * m4-1.4.16-10.el7.x86_64
@@ -18,7 +18,7 @@ An Ansible code that custom compiles the following components on RedHat/CentOS o
     * gcc-gfortran.x86_64
     * java-1.8.0-openjdk-devel
                
-## Following entries needs to be done to ldconfig
+## Prerequisite entries needs to be done to ldconfig
     /data1/Source/db-4.7.25/build_unix/.libs/
     /data1/apps-install/lib
     /data1/apps-install/lib64
