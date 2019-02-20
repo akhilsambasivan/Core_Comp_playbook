@@ -1,45 +1,45 @@
 ---
 - name: Source Installation for base system
   hosts: slave
-  remote_user: perfbhi
+  remote_user: test
   tasks:
        - name: Create base dir for source compilation
          file:
            path: "/data1/apps-install"
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0777
            state: directory
 
        - name: Add additional bash_profile entries
          lineinfile:
-           path: /home/perfbhi/.bash_profile
+           path: /home/test/.bash_profile
            line: 'export PATH=/data1/apps-install/bin:/data1/DB/bin:/data1/openldap/bin:/data1/Python-2.7.5/bin:$PATH'
 
        - name: Add additional bash_profile entries
          lineinfile:
-           path: /home/perfbhi/.bash_profile
+           path: /home/test/.bash_profile
            line: 'export LD_LIBRARY_PATH=/data1/apps-install/lib:/data1/apps-install/lib64:/data1/DB/lib:/data1/openldap/lib:/data1/Python-2.7.5/lib:$LD_LIBRARY_PATH'
 
        - name: Source bash_profile
-         shell: source .bash_profile chdir=/home/perfbhi
+         shell: source .bash_profile chdir=/home/test
          args:
            executable: /bin/bash
 
        - name: Create remote dir for copying Source packages
          file:
            path: "/data1/Source"
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0777
            state: directory
 
        - name: Copy Pen package
          copy:
-           src: /home/perfbhi/ansible/Source/pen-0.18.0.tar.gz
+           src: /home/test/ansible/Source/pen-0.18.0.tar.gz
            dest: /data1/Source/pen-0.18.0.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar Pen Package
@@ -57,10 +57,10 @@
 
        - name: Copy BDB package
          copy:
-           src: /home/perfbhi/ansible/Source/db-4.7.25.tar.gz
+           src: /home/test/ansible/Source/db-4.7.25.tar.gz
            dest: /data1/Source/db-4.7.25.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar BDB Package
@@ -78,10 +78,10 @@
 
        - name: Copy OpenLDAP package
          copy:
-           src: /home/perfbhi/ansible/Source/openldap-2.4.35.gz
+           src: /home/test/ansible/Source/openldap-2.4.35.gz
            dest: /data1/Source/openldap-2.4.35.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar OpenLDAP Package
@@ -107,10 +107,10 @@
 
        - name: Copy Libtool 2.4.6 package
          copy:
-           src: /home/perfbhi/ansible/Source/libtool-2.4.6.tar.gz
+           src: /home/test/ansible/Source/libtool-2.4.6.tar.gz
            dest: /data1/Source/libtool-2.4.6.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar Libtool 2.4.6 Package
@@ -128,10 +128,10 @@
 
        - name: Copy Autoconf package
          copy:
-           src: /home/perfbhi/ansible/Source/autoconf-2.69.tar.xz
+           src: /home/test/ansible/Source/autoconf-2.69.tar.xz
            dest: /data1/Source/autoconf-2.69.tar.xz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar Autoconf Package
@@ -149,10 +149,10 @@
 
        - name: Copy Automake package
          copy:
-           src: /home/perfbhi/ansible/Source/automake-1.15.tar.gz
+           src: /home/test/ansible/Source/automake-1.15.tar.gz
            dest: /data1/Source/automake-1.15.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar Automake Package
@@ -170,10 +170,10 @@
 
        - name: Copy PCRE package
          copy:
-           src: /home/perfbhi/ansible/Source/pcre-8.33.zip
+           src: /home/test/ansible/Source/pcre-8.33.zip
            dest: /data1/Source/pcre-8.33.zip
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar PCRE Package
@@ -191,10 +191,10 @@
 
        - name: Copy Texinfo package
          copy:
-           src: /home/perfbhi/ansible/Source/texinfo-6.4.tar.gz
+           src: /home/test/ansible/Source/texinfo-6.4.tar.gz
            dest: /data1/Source/texinfo-6.4.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar Texinfo Package
@@ -212,10 +212,10 @@
 
        - name: Copy Help2man package
          copy:
-           src: /home/perfbhi/ansible/Source/help2man-1.47.5.tar.xz
+           src: /home/test/ansible/Source/help2man-1.47.5.tar.xz
            dest: /data1/Source/help2man-1.47.5.tar.xz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Untar Help2man Package
@@ -233,10 +233,10 @@
 
        - name: Copy Apache package
          copy:
-           src: /home/perfbhi/ansible/Source/httpd-2.4.37.tar.bz2
+           src: /home/test/ansible/Source/httpd-2.4.37.tar.bz2
            dest: /data1/Source/httpd-2.4.37.tar.bz2
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Apache Package
@@ -247,10 +247,10 @@
 
        - name: Copy Apr package
          copy:
-           src: /home/perfbhi/ansible/Source/apr-1.6.5.tar.bz2
+           src: /home/test/ansible/Source/apr-1.6.5.tar.bz2
            dest: /data1/Source/apr-1.6.5.tar.bz2
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Apr Package
@@ -264,10 +264,10 @@
 
        - name: Copy Apr-util package
          copy:
-           src: /home/perfbhi/ansible/Source/apr-util-1.6.1.tar.bz2
+           src: /home/test/ansible/Source/apr-util-1.6.1.tar.bz2
            dest: /data1/Source/apr-util-1.6.1.tar.bz2
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Apr-util Package
@@ -306,10 +306,10 @@
 
        - name: Copy gsoap package
          copy:
-           src: /home/perfbhi/ansible/Source/gsoap_2.8.2.zip
+           src: /home/test/ansible/Source/gsoap_2.8.2.zip
            dest: /data1/Source/gsoap_2.8.2.zip
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack gsoap Package
@@ -330,10 +330,10 @@
 
        - name: Copy mod_fastcgi package
          copy:
-           src: /home/perfbhi/ansible/Source/mod_fastcgi-current.tar.gz
+           src: /home/test/ansible/Source/mod_fastcgi-current.tar.gz
            dest: /data1/Source/mod_fastcgi-current.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack mod_fastcgi Package
@@ -357,18 +357,18 @@
 
        - name: Copy mod_fastcgi conf
          copy:
-           src: /home/perfbhi/ansible/Source/fastcgi.conf
+           src: /home/test/ansible/Source/fastcgi.conf
            dest: /data1/httpd/apache/conf/extra/
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0655
 
        - name: Copy FastCGI package
          copy:
-           src: /home/perfbhi/ansible/Source/fcgi.tar.gz
+           src: /home/test/ansible/Source/fcgi.tar.gz
            dest: /data1/Source/fcgi.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack FastCGI Package
@@ -386,10 +386,10 @@
 
        - name: Copy Protobuf package
          copy:
-           src: /home/perfbhi/ansible/Source/protobuf-3.0.0.tar.gz
+           src: /home/test/ansible/Source/protobuf-3.0.0.tar.gz
            dest: /data1/Source/protobuf-3.0.0.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Protobuf Package
@@ -410,10 +410,10 @@
 
        - name: Copy Confuse package
          copy:
-           src: /home/perfbhi/ansible/Source/confuse-2.7.tar.gz
+           src: /home/test/ansible/Source/confuse-2.7.tar.gz
            dest: /data1/Source/confuse-2.7.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Confuse Package
@@ -431,10 +431,10 @@
 
        - name: Copy Python-2.7.5 package
          copy:
-           src: /home/perfbhi/ansible/Source/Python-2.7.5.tar.xz
+           src: /home/test/ansible/Source/Python-2.7.5.tar.xz
            dest: /data1/Source/Python-2.7.5.tar.xz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Python-2.7.5 Package
@@ -455,10 +455,10 @@
 
        - name: Copy Boost 1_64 package
          copy:
-           src: /home/perfbhi/ansible/Source/boost_1_64_0.tar.gz
+           src: /home/test/ansible/Source/boost_1_64_0.tar.gz
            dest: /data1/Source/boost_1_64_0.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Boost 1_64 Package
@@ -480,10 +480,10 @@
 
        - name: Copy Thrift package
          copy:
-           src: /home/perfbhi/ansible/Source/thrift-0.8.0.tar.gz
+           src: /home/test/ansible/Source/thrift-0.8.0.tar.gz
            dest: /data1/Source/thrift-0.8.0.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Thrift Package
@@ -505,10 +505,10 @@
 
        - name: Copy Cmake package
          copy:
-           src: /home/perfbhi/ansible/Source/cmake-3.2.1.tar.gz
+           src: /home/test/ansible/Source/cmake-3.2.1.tar.gz
            dest: /data1/Source/cmake-3.2.1.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Cmake Package
@@ -526,10 +526,10 @@
 
        - name: Copy Libuv package
          copy:
-           src: /home/perfbhi/ansible/Source/libuv-1.x.zip
+           src: /home/test/ansible/Source/libuv-1.x.zip
            dest: /data1/Source/libuv-1.x.zip
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Libuv Package
@@ -552,10 +552,10 @@
 
        - name: Copy cpp-driver package
          copy:
-           src: /home/perfbhi/ansible/Source/cpp-driver-2.2.2.tar.gz
+           src: /home/test/ansible/Source/cpp-driver-2.2.2.tar.gz
            dest: /data1/Source/cpp-driver-2.2.2.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack cpp-driver Package
@@ -577,10 +577,10 @@
 
        - name: Copy Libavrocpp package
          copy:
-           src: /home/perfbhi/ansible/Source/avro-cpp-1.8.2.tar.gz
+           src: /home/test/ansible/Source/avro-cpp-1.8.2.tar.gz
            dest: /data1/Source/avro-cpp-1.8.2.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Libavrocpp Package
@@ -592,8 +592,8 @@
        - name: Create build dir for Libavrocpp compilation
          file:
            path: "/data1/Source/avro-cpp-1.8.2/build"
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0777
            state: directory
 
@@ -608,10 +608,10 @@
 
        - name: Copy librd-KAFKA package
          copy:
-           src: /home/perfbhi/ansible/Source/librdkafka-master.zip
+           src: /home/test/ansible/Source/librdkafka-master.zip
            dest: /data1/Source/librdkafka-master.zip
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack librd-KAFKA Package
@@ -629,10 +629,10 @@
 
        - name: Copy cpprestsdk-2.9.0 package
          copy:
-           src: /home/perfbhi/ansible/Source/cpprestsdk-2.9.0.tar.gz
+           src: /home/test/ansible/Source/cpprestsdk-2.9.0.tar.gz
            dest: /data1/Source/cpprestsdk-2.9.0.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack cpprestsdk-2.9.0 Package
@@ -644,8 +644,8 @@
        - name: Create build dir for cpprestsdk-2.9.0 compilation
          file:
            path: "/data1/Source/cpprestsdk-2.9.0/Release/build.release"
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0777
            state: directory
 
@@ -660,10 +660,10 @@
 
        - name: Copy szip package
          copy:
-           src: /home/perfbhi/ansible/Source/szip-2.1.1.tar.gz
+           src: /home/test/ansible/Source/szip-2.1.1.tar.gz
            dest: /data1/Source/szip-2.1.1.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack szip Package
@@ -681,10 +681,10 @@
 
        - name: Copy GRPC package
          copy:
-           src: /home/perfbhi/ansible/Source/grpc-1.1.0-pre1.tar.gz
+           src: /home/test/ansible/Source/grpc-1.1.0-pre1.tar.gz
            dest: /data1/Source/grpc-1.1.0-pre1.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack GRPC Package
@@ -695,10 +695,10 @@
 
        - name: Copy Protobuf for GRPC package
          copy:
-           src: /home/perfbhi/ansible/Source/protobuf-3.0.0.tar.gz
+           src: /home/test/ansible/Source/protobuf-3.0.0.tar.gz
            dest: /data1/Source/protobuf-3.0.0.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Protobuf for GRPC Package
@@ -734,10 +734,10 @@
 
        - name: Copy Hdf5 package
          copy:
-           src: /home/perfbhi/ansible/Source/hdf5-1.10.1.tar.gz
+           src: /home/test/ansible/Source/hdf5-1.10.1.tar.gz
            dest: /data1/Source/hdf5-1.10.1.tar.gz
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Unpack Hdf5 Package
@@ -757,17 +757,17 @@
 
        - name: Copy libopc package
          copy:
-           src: /home/perfbhi/ansible/Source/libopc-43456.zip
+           src: /home/test/ansible/Source/libopc-43456.zip
            dest: /data1/Source/libopc-43456.zip
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0755
 
        - name: Create base dir for libopc source compilation
          file:
            path: "/data1/Source/libopc"
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0777
            state: directory
 
@@ -780,8 +780,8 @@
        - name: Configure permission for libopc packages
          file:
            path: "/data1/Source/libopc"
-           owner: perfbhi
-           group: perfbhi
+           owner: test
+           group: test
            mode: 0777
            state: directory
            recurse: yes
@@ -817,4 +817,4 @@
          shell: make "DESTDIR=/data1/apps-install install" chdir=/data1/Source/libopc
 
        - name: INSTALLATION COMPLETED
-         shell: echo "INSTALLATION COMPLETED" chdir=/home/perfbhi
+         shell: echo "INSTALLATION COMPLETED" chdir=/home/test
